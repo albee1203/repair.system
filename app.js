@@ -4,7 +4,9 @@
   const refresh = document.querySelector("#refresh-list");
   const formMessage = document.querySelector("#form-message");
   const listMessage = document.querySelector("#list-message");
+  const filterMessage = document.querySelector("#filter-message");
   const list = document.querySelector("#repair-list");
+  const filterButtons = document.querySelectorAll("[data-urgency-filter]");
   const template = document.querySelector("#repair-item");
   const table = "repair_requests";
   const formFields = ["reporter_name", "location", "category", "description", "urgency"];
@@ -13,6 +15,8 @@
   let client;
   let submitting = false;
   let listRequest = 0;
+  let recentRequests = null;
+  let selectedUrgency = "";
 
   function showMessage(target, message, kind = "") {
     target.textContent = message;
@@ -31,9 +35,31 @@
           node.textContent = record[field];
         }
       }
+      item.querySelector(".urgency").classList.toggle("urgency-high", record.urgency === "高");
       return item;
     });
     list.replaceChildren(...items);
+  }
+
+  function renderFilteredRequests() {
+    if (recentRequests === null) return;
+    const visibleRequests = selectedUrgency
+      ? recentRequests.filter((record) => record.urgency === selectedUrgency)
+      : recentRequests;
+    renderRequests(visibleRequests);
+    showMessage(filterMessage, visibleRequests.length
+      ? ""
+      : selectedUrgency ? "最近 20 筆沒有符合此緊急程度的報修。" : "目前沒有報修紀錄。");
+  }
+
+  for (const button of filterButtons) {
+    button.addEventListener("click", () => {
+      selectedUrgency = button.dataset.urgencyFilter;
+      for (const option of filterButtons) {
+        option.setAttribute("aria-pressed", String(option === button));
+      }
+      renderFilteredRequests();
+    });
   }
 
   async function loadRequests() {
@@ -49,8 +75,9 @@
         .limit(20);
       if (request !== listRequest) return;
       if (error) throw error;
-      renderRequests(data);
-      showMessage(listMessage, data.length ? "" : "目前沒有報修紀錄。");
+      recentRequests = data;
+      renderFilteredRequests();
+      showMessage(listMessage, "");
     } catch {
       if (request === listRequest) {
         showMessage(listMessage, "無法更新報修清單，請稍後重新整理。", "error");

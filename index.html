@@ -58,7 +58,14 @@
         </div>
         <button class="secondary" id="refresh-list" type="button" disabled>重新整理</button>
       </div>
+      <div class="urgency-filters" role="group" aria-label="依緊急程度篩選">
+        <button class="secondary" type="button" data-urgency-filter="" aria-pressed="true" aria-controls="repair-list">全部</button>
+        <button class="secondary" type="button" data-urgency-filter="高" aria-pressed="false" aria-controls="repair-list">高</button>
+        <button class="secondary" type="button" data-urgency-filter="中" aria-pressed="false" aria-controls="repair-list">中</button>
+        <button class="secondary" type="button" data-urgency-filter="低" aria-pressed="false" aria-controls="repair-list">低</button>
+      </div>
       <p id="list-message" class="feedback" role="status"></p>
+      <p id="filter-message" class="feedback" role="status"></p>
       <ul id="repair-list" class="repair-list"></ul>
     </section>
   </main>
@@ -72,7 +79,7 @@
       <dl class="details">
         <div><dt>報修人</dt><dd data-field="reporter_name"></dd></div>
         <div><dt>類別</dt><dd data-field="category"></dd></div>
-        <div><dt>緊急程度</dt><dd data-field="urgency"></dd></div>
+        <div><dt>緊急程度</dt><dd><span class="urgency" data-field="urgency"></span></dd></div>
         <div><dt>登記時間</dt><dd><time data-field="created_at"></time></dd></div>
       </dl>
     </li>
