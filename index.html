@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>報修登記</title>
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="./config.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="shell">
+      <h1>報修登記</h1>
+      <p>登記設備、網路或環境問題，並查看最近的處理狀態。</p>
+    </div>
+  </header>
+  <main class="shell">
+    <section class="panel" aria-labelledby="form-heading">
+      <h2 id="form-heading">新增報修</h2>
+      <p class="muted">所有欄位皆必填。報修內容可公開查閱，請使用代稱並避免填入個資。</p>
+      <form id="repair-form">
+        <div class="fields">
+          <label>報修人
+            <input name="reporter_name" maxlength="100" placeholder="例如：設備值班員" required>
+          </label>
+          <label>地點或部門
+            <input name="location" maxlength="200" placeholder="例如：二樓會議室" required>
+          </label>
+          <label>類別
+            <select name="category" required>
+              <option value="" disabled selected>請選擇類別</option>
+              <option>設備</option><option>網路</option><option>環境</option><option>其他</option>
+            </select>
+          </label>
+          <label>緊急程度
+            <select name="urgency" required>
+              <option>低</option><option selected>中</option><option>高</option>
+            </select>
+          </label>
+          <label class="wide">問題說明
+            <textarea name="description" rows="4" maxlength="2000" placeholder="描述發生的問題與目前影響" required></textarea>
+          </label>
+        </div>
+        <div class="actions">
+          <button id="submit-repair" type="submit" disabled>送出報修</button>
+          <p id="form-message" class="feedback" role="status"></p>
+        </div>
+        <noscript><p>請啟用 JavaScript 以使用報修表單與清單。</p></noscript>
+      </form>
+    </section>
+    <section class="panel" aria-labelledby="list-heading">
+      <div class="list-heading">
+        <div>
+          <h2 id="list-heading">最近報修</h2>
+          <p class="muted">最近 20 筆，依登記時間由新到舊。</p>
+        </div>
+        <button class="secondary" id="refresh-list" type="button" disabled>重新整理</button>
+      </div>
+      <p id="list-message" class="feedback" role="status"></p>
+      <ul id="repair-list" class="repair-list"></ul>
+    </section>
+  </main>
+  <template id="repair-item">
+    <li>
+      <div class="record-heading">
+        <h3 data-field="location"></h3>
+        <span class="status" data-field="status"></span>
+      </div>
+      <p class="description" data-field="description"></p>
+      <dl class="details">
+        <div><dt>報修人</dt><dd data-field="reporter_name"></dd></div>
+        <div><dt>類別</dt><dd data-field="category"></dd></div>
+        <div><dt>緊急程度</dt><dd data-field="urgency"></dd></div>
+        <div><dt>登記時間</dt><dd><time data-field="created_at"></time></dd></div>
+      </dl>
+    </li>
+  </template>
+</body>
+</html>
