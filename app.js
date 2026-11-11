@@ -3,6 +3,7 @@
   const submit = document.querySelector("#submit-repair");
   const refresh = document.querySelector("#refresh-list");
   const formMessage = document.querySelector("#form-message");
+  const connectionMessage = document.querySelector("#connection-message");
   const listMessage = document.querySelector("#list-message");
   const filterMessage = document.querySelector("#filter-message");
   const list = document.querySelector("#repair-list");
@@ -13,6 +14,7 @@
   const listFields = [...formFields, "status", "created_at"];
   const dateFormat = new Intl.DateTimeFormat("zh-TW", { dateStyle: "medium", timeStyle: "short" });
   let client;
+  let connecting = false;
   let submitting = false;
   let listRequest = 0;
   let recentRequests = null;
@@ -21,6 +23,29 @@
   function showMessage(target, message, kind = "") {
     target.textContent = message;
     target.dataset.kind = kind;
+  }
+
+  function updateConnection() {
+    const offline = !navigator.onLine;
+    connectionMessage.hidden = !offline;
+    connectionMessage.textContent = offline
+      ? "目前離線。恢復網路連線後才能查詢或送出報修。"
+      : "";
+    submit.disabled = offline || !client || submitting;
+    refresh.disabled = offline || !client || list.hasAttribute("aria-busy");
+  }
+
+  function loadSupabase() {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+      script.onload = resolve;
+      script.onerror = () => {
+        script.remove();
+        reject(new Error("Supabase CDN unavailable"));
+      };
+      document.head.append(script);
+    });
   }
 
   function renderRequests(records) {
@@ -63,6 +88,7 @@
   }
 
   async function loadRequests() {
+    if (!navigator.onLine) return;
     const request = ++listRequest;
     refresh.disabled = true;
     list.setAttribute("aria-busy", "true");
@@ -85,14 +111,14 @@
     } finally {
       if (request === listRequest) {
         list.removeAttribute("aria-busy");
-        refresh.disabled = false;
+        updateConnection();
       }
     }
   }
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (!client || submitting) return;
+    if (!client || submitting || !navigator.onLine) return;
 
     const values = new FormData(form);
     const record = Object.fromEntries(formFields.map((field) => [field, values.get(field).trim()]));
@@ -117,23 +143,45 @@
       showMessage(formMessage, "未能確認送出結果。請先重新整理清單，再視需要重送。", "error");
     } finally {
       for (const field of formFields) form.elements.namedItem(field).disabled = false;
-      submit.disabled = false;
       submitting = false;
+      updateConnection();
     }
   });
 
-  try {
-    const { url, publishableKey } = window.repairConfig;
-    client = window.supabase.createClient(url, publishableKey, {
-      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-    });
-  } catch {
-    showMessage(formMessage, "無法啟動報修服務，請重新載入網頁。", "error");
-    showMessage(listMessage, "報修清單暫時無法載入。", "error");
-    return;
+  async function connect() {
+    updateConnection();
+    if (!navigator.onLine || connecting) return;
+    if (!client) {
+      connecting = true;
+      try {
+        if (!window.supabase) await loadSupabase();
+        const { url, publishableKey } = window.repairConfig;
+        client = window.supabase.createClient(url, publishableKey, {
+          auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+        });
+        showMessage(formMessage, "");
+      } catch {
+        if (navigator.onLine) {
+          showMessage(formMessage, "無法啟動報修服務，請重新載入網頁。", "error");
+          showMessage(listMessage, "報修清單暫時無法載入。", "error");
+        }
+        return;
+      } finally {
+        connecting = false;
+        updateConnection();
+      }
+    }
+    void loadRequests();
   }
 
-  submit.disabled = false;
   refresh.addEventListener("click", loadRequests);
-  void loadRequests();
+  window.addEventListener("online", connect);
+  window.addEventListener("offline", updateConnection);
+  void connect();
+
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" }).catch((error) => {
+      console.warn("無法啟用離線網頁", error);
+    });
+  }
 })();

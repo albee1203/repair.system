@@ -3,9 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123e43">
   <title>報修登記</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/repair-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="./icons/repair-180.png">
   <link rel="stylesheet" href="./style.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="./config.js"></script>
   <script defer src="./app.js"></script>
 </head>
@@ -17,6 +20,7 @@
     </div>
   </header>
   <main class="shell">
+    <p id="connection-message" class="connection-message" role="status" hidden></p>
     <section class="panel" aria-labelledby="form-heading">
       <h2 id="form-heading">新增報修</h2>
       <p class="muted">所有欄位皆必填。報修內容可公開查閱，請使用代稱並避免填入個資。</p>

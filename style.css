@@ -20,6 +20,13 @@ h1, h2, h3, p, dl, dd { margin: 0; }
 .masthead h1 { font-size: clamp(2rem, 7vw, 3rem); letter-spacing: .04em; }
 .masthead p { color: #d7ebe8; margin-top: .35rem; }
 main.shell { display: grid; gap: 1.25rem; padding-block: 1.25rem 3rem; }
+.connection-message {
+  padding: .75rem 1rem;
+  border: 1px solid #d8c385;
+  border-radius: .6rem;
+  color: #654700;
+  background: #fff5d7;
+}
 .panel {
   padding: clamp(1rem, 4vw, 2rem);
   background: white;
