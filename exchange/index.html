@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123e43">
+  <title>匯率換算</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/exchange-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="./icons/exchange-180.png">
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <header class="top">
+    <h1>匯率換算</h1>
+    <p id="rate-date" role="status">載入匯率中…</p>
+  </header>
+  <main>
+    <form id="converter" class="card" autocomplete="off" onsubmit="return false">
+      <div class="direction" role="group" aria-label="換算方向">
+        <button type="button" data-direction="toTwd" aria-pressed="true">外幣 → 台幣</button>
+        <button type="button" data-direction="fromTwd" aria-pressed="false">台幣 → 外幣</button>
+      </div>
+
+      <label class="field">
+        <span id="amount-label">外幣金額</span>
+        <div class="amount-row">
+          <input id="amount" type="text" inputmode="decimal" enterkeyhint="done" placeholder="0" aria-describedby="amount-label">
+          <select id="currency" aria-label="幣別" disabled></select>
+        </div>
+      </label>
+
+      <div class="rate-type" role="group" aria-label="匯率種類">
+        <button type="button" data-kind="spot" aria-pressed="true">即期</button>
+        <button type="button" data-kind="cash" aria-pressed="false">現金</button>
+      </div>
+
+      <div class="result" aria-live="polite">
+        <span id="result-label">可換得新臺幣</span>
+        <output id="result">—</output>
+        <small id="rate-used"></small>
+      </div>
+    </form>
+
+    <section class="card">
+      <h2 id="all-heading">全部幣別</h2>
+      <p class="muted" id="all-note">輸入金額後，一次看各幣別換算結果。</p>
+      <ul id="all-list" class="all-list"></ul>
+    </section>
+
+    <p class="muted footnote">資料來源：臺灣銀行牌告匯率，週一至週五每日更新。實際成交以銀行為準。<br><a href="../index.html">回報修登記</a></p>
+  </main>
+</body>
+</html>
