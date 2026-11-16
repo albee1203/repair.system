@@ -1,5 +1,7 @@
+import json
 import pathlib
 import sys
+import tempfile
 import unittest
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
@@ -28,6 +30,26 @@ class ParseTest(unittest.TestCase):
     def test_rejects_unexpected_content(self):
         with self.assertRaises(ValueError):
             fetch_rates.parse("<html>維護中</html>")
+
+
+class HistoryTest(unittest.TestCase):
+    def test_builds_major_currency_series(self):
+        rates = fetch_rates.parse(fetch_rates.decode(SAMPLE.read_bytes()))
+        with tempfile.TemporaryDirectory() as tmp:
+            out = pathlib.Path(tmp)
+            fetch_rates.write_daily(rates, out, "2026-11-12")
+            bumped = [dict(r, spot_sell=r["spot_sell"] + 0.1 if r["spot_sell"] else None) for r in rates]
+            fetch_rates.write_daily(bumped, out, "2026-11-13")
+            history = json.loads(fetch_rates.build_history(out).read_text("utf-8"))
+        self.assertEqual(history["updated"], "2026-11-13")
+        usd = history["currencies"]["USD"]
+        self.assertEqual(usd["basis"], "spot_sell")
+        self.assertEqual(usd["points"][0], ["2026-11-12", 32.325])
+        self.assertAlmostEqual(usd["points"][1][1], 32.425)
+        self.assertEqual(history["currencies"]["CNY"]["points"], [])  # 範例檔沒有人民幣
+
+    def test_cash_basis_when_no_spot(self):
+        self.assertEqual(fetch_rates.basis_for("KRW", [{"spot_sell": None, "cash_sell": 0.026}]), "cash_sell")
 
 
 if __name__ == "__main__":

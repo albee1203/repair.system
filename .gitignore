@@ -1,3 +1,4 @@
 outputs/
 tmp/
 temp/
+__pycache__/

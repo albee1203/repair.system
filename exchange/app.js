@@ -6,9 +6,14 @@ const STORE_KEY = "exchange-app-state";
 const $ = (id) => document.getElementById(id);
 const state = { direction: "toTwd", kind: "spot", currency: "USD", amount: "" };
 let rates = [];
+let range = 22; // 走勢期間（營業日數）
 
-try { Object.assign(state, JSON.parse(localStorage.getItem(STORE_KEY)) ?? {}); } catch {}
-const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch {} };
+try {
+  const saved = JSON.parse(localStorage.getItem(STORE_KEY)) ?? {};
+  for (const key of Object.keys(state)) if (key in saved) state[key] = saved[key];
+  if ([5, 22, 66].includes(saved.range)) range = saved.range;
+} catch {}
+const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify({ ...state, range })); } catch {} };
 
 const label = (code) => NAMES[code] ? `${NAMES[code]} ${code}` : code;
 const parseAmount = (text) => {
@@ -113,6 +118,144 @@ for (const b of document.querySelectorAll("[data-direction]")) b.addEventListene
 for (const b of document.querySelectorAll("[data-kind]")) b.addEventListener("click", () => { state.kind = b.dataset.kind; render(); });
 
 load();
+
+// ---- 主要貨幣匯率變動 ----
+const MAJOR = ["USD", "CNY", "HKD", "THB", "EUR", "KRW"];
+const SVG_NS = "http://www.w3.org/2000/svg";
+let history = null;
+
+const decimalsFor = (v) => v >= 10 ? 3 : v >= 1 ? 4 : 5;
+const fmtRate = (v) => v.toFixed(decimalsFor(v));
+const shortDate = (d) => `${Number(d.slice(5, 7))}/${Number(d.slice(8, 10))}`;
+
+function changeText(curr, prev) {
+  const span = document.createElement("span");
+  span.className = "chg";
+  if (prev == null) { span.textContent = "—"; return span; }
+  const diff = curr - prev;
+  const pct = prev ? (diff / prev) * 100 : 0;
+  const arrow = document.createElement("span");
+  const dir = Math.abs(diff) < 1e-9 ? "flat" : diff > 0 ? "up" : "down";
+  arrow.className = `arrow ${dir}`;
+  arrow.textContent = dir === "up" ? "▲" : dir === "down" ? "▼" : "－";
+  const absDiff = `${diff >= 0 ? "+" : "−"}${Math.abs(diff).toFixed(decimalsFor(curr))}`;
+  span.append(arrow, ` ${pct >= 0 ? "+" : "−"}${Math.abs(pct).toFixed(2)}%`);
+  span.title = `較前一營業日 ${absDiff} 台幣`;
+  span.setAttribute("aria-label", dir === "flat" ? "與前一營業日持平"
+    : `較前一營業日${dir === "up" ? "上漲" : "下跌"} ${Math.abs(diff).toFixed(decimalsFor(curr))}，${Math.abs(pct).toFixed(2)}%`);
+  return span;
+}
+
+function sparkline(points, onHover) {
+  const W = 160, H = 44, P = 4;
+  const svg = document.createElementNS(SVG_NS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("preserveAspectRatio", "none");
+  svg.classList.add("spark");
+  const values = points.map((p) => p[1]);
+  const min = Math.min(...values), max = Math.max(...values);
+  const span = max - min || max * 0.001 || 1;
+  const x = (i) => P + (i * (W - 2 * P)) / (points.length - 1);
+  const y = (v) => H - P - ((v - min) / span) * (H - 2 * P);
+  const el = (name, attrs) => {
+    const node = document.createElementNS(SVG_NS, name);
+    for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+    svg.append(node); return node;
+  };
+  el("line", { class: "base", x1: P, x2: W - P, y1: y(values[0]), y2: y(values[0]), "vector-effect": "non-scaling-stroke" });
+  el("polyline", { class: "line", points: points.map((p, i) => `${x(i)},${y(p[1])}`).join(" "), "vector-effect": "non-scaling-stroke" });
+  const cursor = el("line", { class: "cursor", y1: 0, y2: H, visibility: "hidden", "vector-effect": "non-scaling-stroke" });
+  const dot = el("circle", { class: "dot", r: 3.5, cx: x(points.length - 1), cy: y(values.at(-1)), "vector-effect": "non-scaling-stroke" });
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", `${shortDate(points[0][0])} 至 ${shortDate(points.at(-1)[0])}，最低 ${fmtRate(min)}，最高 ${fmtRate(max)}`);
+
+  const move = (clientX) => {
+    const box = svg.getBoundingClientRect();
+    const rel = ((clientX - box.left) / box.width) * W;
+    const i = Math.max(0, Math.min(points.length - 1, Math.round(((rel - P) / (W - 2 * P)) * (points.length - 1))));
+    cursor.setAttribute("x1", x(i)); cursor.setAttribute("x2", x(i)); cursor.setAttribute("visibility", "visible");
+    dot.setAttribute("cx", x(i)); dot.setAttribute("cy", y(values[i]));
+    onHover(i);
+  };
+  const leave = () => {
+    cursor.setAttribute("visibility", "hidden");
+    dot.setAttribute("cx", x(points.length - 1)); dot.setAttribute("cy", y(values.at(-1)));
+    onHover(null);
+  };
+  svg.addEventListener("pointermove", (e) => move(e.clientX));
+  svg.addEventListener("pointerdown", (e) => move(e.clientX));
+  svg.addEventListener("pointerleave", leave);
+  svg.addEventListener("pointercancel", leave);
+  return svg;
+}
+
+function renderTrends() {
+  for (const b of document.querySelectorAll("[data-range]")) b.setAttribute("aria-pressed", Number(b.dataset.range) === range);
+  const list = $("trend-list");
+  if (!history) { list.innerHTML = `<li class="muted">無法載入匯率走勢，請連線後再試。</li>`; return; }
+  list.replaceChildren();
+  for (const code of MAJOR) {
+    const all = history.currencies[code]?.points ?? [];
+    if (!all.length) continue;
+    const points = all.slice(-(range + 1));
+    const [lastDate, last] = all.at(-1);
+    const prev = all.length > 1 ? all.at(-2)[1] : null;
+    const li = document.createElement("li");
+
+    const name = document.createElement("div");
+    name.className = "trend-name";
+    name.innerHTML = "<strong></strong><small></small>";
+    name.firstChild.textContent = NAMES[code];
+    name.lastChild.textContent = code;
+    name.title = `換算 ${NAMES[code]}`;
+    name.addEventListener("click", () => pick(code));
+
+    const value = document.createElement("div");
+    value.className = "trend-value";
+    const strong = document.createElement("strong");
+    const sub = document.createElement("small");
+    const showLatest = () => {
+      strong.textContent = fmtRate(last);
+      sub.replaceChildren(changeText(last, prev));
+    };
+    showLatest();
+    value.append(strong, sub);
+
+    let chart;
+    if (points.length < 2) {
+      chart = document.createElement("div");
+      chart.className = "spark-empty";
+      chart.textContent = "資料累積中";
+    } else {
+      chart = sparkline(points, (i) => {
+        if (i == null) return showLatest();
+        strong.textContent = fmtRate(points[i][1]);
+        sub.textContent = `${shortDate(points[i][0])}${points[i][0] === lastDate ? "（最新）" : ""}`;
+      });
+    }
+    li.append(name, chart, value);
+    list.append(li);
+  }
+  if (!list.children.length) list.innerHTML = `<li class="muted">尚無走勢資料。</li>`;
+}
+
+async function loadHistory() {
+  try {
+    const res = await fetch("../rates/history.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error(res.status);
+    history = await res.json();
+  } catch {
+    history = null;
+  }
+  renderTrends();
+}
+
+for (const b of document.querySelectorAll("[data-range]")) b.addEventListener("click", () => {
+  range = Number(b.dataset.range);
+  save();
+  renderTrends();
+});
+loadHistory();
 
 if ("serviceWorker" in navigator) {
   if (navigator.serviceWorker.controller) {
