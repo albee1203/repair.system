@@ -1,7 +1,7 @@
 // 匯率換算 App：介面與匯率資料都先連網取得最新版，離線時改用上次下載的版本。
 const cachePrefix = `exchange-app:${self.registration.scope}:`;
-const cacheName = `${cachePrefix}v4`;
-const shell = ["./", "index.html", "style.css", "app.js", "manifest.webmanifest",
+const cacheName = `${cachePrefix}v5`;
+const shell = ["./", "index.html", "style.css", "app.js", "../manifest.webmanifest",
   "icons/exchange-180.png", "icons/exchange-192.png", "icons/exchange-512.png"]
   .map((p) => new URL(p, self.registration.scope).href);
 const indexUrl = new URL("index.html", self.registration.scope).href;
