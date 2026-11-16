@@ -180,6 +180,12 @@
   void connect();
 
   if ("serviceWorker" in navigator) {
+  if (navigator.serviceWorker.controller) {
+    let reloaded = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (!reloaded) { reloaded = true; location.reload(); }
+    });
+  }
     navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" }).catch((error) => {
       console.warn("無法啟用離線網頁", error);
     });

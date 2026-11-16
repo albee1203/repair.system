@@ -115,5 +115,11 @@ for (const b of document.querySelectorAll("[data-kind]")) b.addEventListener("cl
 load();
 
 if ("serviceWorker" in navigator) {
+  if (navigator.serviceWorker.controller) {
+    let reloaded = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (!reloaded) { reloaded = true; location.reload(); }
+    });
+  }
   navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" }).catch(() => {});
 }
