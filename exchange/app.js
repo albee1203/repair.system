@@ -266,3 +266,40 @@ if ("serviceWorker" in navigator) {
   }
   navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" }).catch(() => {});
 }
+
+// ---- 安裝提示 ----
+(() => {
+  const bar = $("install-bar");
+  const button = $("install-button");
+  const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  let dismissed = false;
+  try { dismissed = localStorage.getItem("exchange-install-dismissed") === "1"; } catch {}
+  if (standalone || dismissed) return;
+
+  let deferred = null;
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    deferred = event;
+    button.hidden = false;
+    bar.hidden = false;
+  });
+  button.addEventListener("click", async () => {
+    if (!deferred) return;
+    deferred.prompt();
+    await deferred.userChoice.catch(() => {});
+    deferred = null;
+    bar.hidden = true;
+  });
+  window.addEventListener("appinstalled", () => { bar.hidden = true; });
+  $("install-close").addEventListener("click", () => {
+    bar.hidden = true;
+    try { localStorage.setItem("exchange-install-dismissed", "1"); } catch {}
+  });
+
+  // iPhone／iPad Safari 沒有安裝按鈕，改顯示操作說明
+  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if (ios) {
+    $("install-text").textContent = "安裝「匯率換算」：點 Safari 下方的分享按鈕，再選「加入主畫面」。";
+    bar.hidden = false;
+  }
+})();
