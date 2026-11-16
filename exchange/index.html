@@ -17,6 +17,12 @@
     <p id="rate-date" role="status">載入匯率中…</p>
   </header>
   <main>
+    <div id="install-bar" class="install-bar" hidden>
+      <img src="./icons/exchange-192.png" alt="" width="40" height="40">
+      <p id="install-text">將「匯率換算」安裝到主畫面，像 App 一樣開啟。</p>
+      <button id="install-button" type="button" hidden>安裝</button>
+      <button id="install-close" type="button" class="close" aria-label="關閉安裝提示">✕</button>
+    </div>
     <form id="converter" class="card" autocomplete="off" onsubmit="return false">
       <div class="direction" role="group" aria-label="換算方向">
         <button type="button" data-direction="toTwd" aria-pressed="true">外幣 → 台幣</button>

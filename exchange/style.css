@@ -79,3 +79,11 @@ input:focus-visible, select:focus-visible, button:focus-visible { outline: 3px s
 @media (prefers-color-scheme: dark) {
   .direction button[aria-pressed="true"], .rate-type button[aria-pressed="true"], .range button[aria-pressed="true"] { background: var(--accent); color: #0e1d20; }
 }
+
+.install-bar { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto auto; align-items: center; gap: .75rem; padding: .75rem; background: var(--card); border: 1px solid var(--accent); border-radius: 1rem; }
+.install-bar[hidden] { display: none; }
+.install-bar img { border-radius: .6rem; }
+.install-bar p { font-size: .9rem; }
+.install-bar button { font: inherit; border: 0; border-radius: .5rem; padding: .5rem .9rem; cursor: pointer; background: var(--brand); color: #fff; font-weight: 700; }
+.install-bar .close { background: transparent; color: var(--muted); padding: .4rem; font-weight: 400; }
+@media (prefers-color-scheme: dark) { .install-bar button:not(.close) { background: var(--accent); color: #0e1d20; } }
