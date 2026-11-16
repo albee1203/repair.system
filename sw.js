@@ -1,5 +1,5 @@
 const cachePrefix = `repair-shell:${self.registration.scope}:`;
-const cacheName = `${cachePrefix}v4`;
+const cacheName = `${cachePrefix}v5`;
 const indexUrl = new URL("index.html", self.registration.scope).href;
 const files = new Set([
   "index.html", "style.css", "app.js", "config.js", "manifest.webmanifest",
