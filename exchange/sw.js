@@ -1,6 +1,6 @@
-// 匯率換算 App：介面檔案優先用快取；匯率資料先連網，離線時改用上次下載的版本。
+// 匯率換算 App：介面與匯率資料都先連網取得最新版，離線時改用上次下載的版本。
 const cachePrefix = `exchange-app:${self.registration.scope}:`;
-const cacheName = `${cachePrefix}v1`;
+const cacheName = `${cachePrefix}v2`;
 const shell = ["./", "index.html", "style.css", "app.js", "manifest.webmanifest",
   "icons/exchange-180.png", "icons/exchange-192.png", "icons/exchange-512.png"]
   .map((p) => new URL(p, self.registration.scope).href);
@@ -50,6 +50,12 @@ self.addEventListener("fetch", (event) => {
   event.respondWith((async () => {
     const cache = await caches.open(cacheName);
     const key = event.request.mode === "navigate" ? indexUrl : url.href;
-    return (await cache.match(key)) ?? fetch(event.request);
+    try {
+      const response = await fetch(key, { cache: "no-cache" });
+      if (response.ok) await cache.put(key, response.clone());
+      return response;
+    } catch (error) {
+      return (await cache.match(key)) ?? Promise.reject(error);
+    }
   })());
 });

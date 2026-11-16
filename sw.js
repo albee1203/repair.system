@@ -1,5 +1,5 @@
 const cachePrefix = `repair-shell:${self.registration.scope}:`;
-const cacheName = `${cachePrefix}v3`;
+const cacheName = `${cachePrefix}v4`;
 const indexUrl = new URL("index.html", self.registration.scope).href;
 const files = new Set([
   "index.html", "style.css", "app.js", "config.js", "manifest.webmanifest",
@@ -10,6 +10,7 @@ self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(cacheName);
     await cache.addAll([...files].map((url) => new Request(url, { cache: "reload" })));
+    await self.skipWaiting(); // 新版立即接手，不必等所有視窗關閉
   })());
 });
 
@@ -31,8 +32,16 @@ self.addEventListener("fetch", (event) => {
     && (url.href === self.registration.scope || url.href === indexUrl);
   if (!home && !files.has(url.href)) return;
 
+  // 先連網取得最新版並更新快取；離線時才使用快取。
   event.respondWith((async () => {
     const cache = await caches.open(cacheName);
-    return await cache.match(home ? indexUrl : url.href) ?? fetch(event.request);
+    const key = home ? indexUrl : url.href;
+    try {
+      const response = await fetch(key, { cache: "no-cache" });
+      if (response.ok) await cache.put(key, response.clone());
+      return response;
+    } catch (error) {
+      return (await cache.match(key)) ?? Promise.reject(error);
+    }
   })());
 });
