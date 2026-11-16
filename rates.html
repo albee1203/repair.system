@@ -2,89 +2,10 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#123e43">
-  <title>每日匯率</title>
-  <link rel="icon" href="./icons/repair-192.png" type="image/png">
-  <link rel="stylesheet" href="./style.css">
-  <style>
-    .rate-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-variant-numeric: tabular-nums; }
-    .rate-table th, .rate-table td { padding: .5rem .6rem; border-bottom: 1px solid #d2e0de; text-align: right; }
-    .rate-table th:first-child, .rate-table td:first-child { text-align: left; }
-    .table-wrap { overflow-x: auto; }
-    main.shell > .panel { min-width: 0; }
-    .rate-table th, .rate-table td:first-child { white-space: nowrap; }
-    .converter { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; margin-top: 1rem; }
-    .converter output { font-size: 1.2rem; font-weight: 700; }
-    .masthead a { color: #d7ebe8; }
-  </style>
+  <meta http-equiv="refresh" content="0; url=./exchange/">
+  <title>匯率換算</title>
 </head>
 <body>
-  <header class="masthead">
-    <div class="shell">
-      <h1>每日匯率</h1>
-      <p>臺灣銀行牌告匯率，各幣別兌新臺幣。<a href="./index.html">回報修登記</a></p>
-    </div>
-  </header>
-  <main class="shell">
-    <section class="panel" aria-labelledby="convert-heading">
-      <h2 id="convert-heading">換算新臺幣</h2>
-      <div class="converter">
-        <label>金額 <input id="amount" type="number" min="0" step="any" value="100"></label>
-        <label>幣別 <select id="currency"></select></label>
-        <div>
-          <div class="muted">以即期買入價換算（銀行向你買外幣）</div>
-          <output id="result" for="amount currency">—</output>
-        </div>
-      </div>
-    </section>
-    <section class="panel" aria-labelledby="table-heading">
-      <h2 id="table-heading">牌告匯率</h2>
-      <p id="rate-date" class="muted" role="status">載入中…</p>
-      <div class="table-wrap">
-        <table class="rate-table">
-          <thead><tr><th>幣別</th><th>現金買入</th><th>現金賣出</th><th>即期買入</th><th>即期賣出</th></tr></thead>
-          <tbody id="rate-rows"></tbody>
-        </table>
-      </div>
-      <p class="muted">「—」表示臺灣銀行未提供該項匯率。歷史資料位於儲存庫的 rates 資料夾，每日一個 CSV 檔。</p>
-    </section>
-  </main>
-  <script>
-    const names = { USD: "美金", HKD: "港幣", GBP: "英鎊", AUD: "澳幣", CAD: "加拿大幣", SGD: "新加坡幣",
-      CHF: "瑞士法郎", JPY: "日圓", ZAR: "南非幣", SEK: "瑞典幣", NZD: "紐元", THB: "泰幣", PHP: "菲國比索",
-      IDR: "印尼幣", EUR: "歐元", KRW: "韓元", VND: "越南盾", MYR: "馬來幣", CNY: "人民幣" };
-    const fmt = (v) => v == null ? "—" : v.toString();
-    let rates = [];
-
-    function convert() {
-      const rate = rates.find((r) => r.currency === document.getElementById("currency").value);
-      const amount = Number(document.getElementById("amount").value);
-      const out = document.getElementById("result");
-      out.textContent = rate?.spot_buy && amount >= 0
-        ? `NT$ ${(amount * rate.spot_buy).toLocaleString("zh-TW", { maximumFractionDigits: 2 })}`
-        : "—";
-    }
-
-    fetch("./rates/latest.json", { cache: "no-store" })
-      .then((res) => { if (!res.ok) throw new Error(res.status); return res.json(); })
-      .then((data) => {
-        rates = data.rates;
-        document.getElementById("rate-date").textContent = `資料日期：${data.date}（抓取時間 ${data.fetched_at}）`;
-        const rows = document.getElementById("rate-rows");
-        const select = document.getElementById("currency");
-        for (const r of rates) {
-          const label = names[r.currency] ? `${names[r.currency]} ${r.currency}` : r.currency;
-          const tr = rows.insertRow();
-          [label, r.cash_buy, r.cash_sell, r.spot_buy, r.spot_sell]
-            .forEach((v, i) => { tr.insertCell().textContent = i ? fmt(v) : v; });
-          if (r.spot_buy) select.add(new Option(label, r.currency));
-        }
-        convert();
-      })
-      .catch(() => { document.getElementById("rate-date").textContent = "尚無匯率資料，請稍後再試。"; });
-    document.getElementById("amount").addEventListener("input", convert);
-    document.getElementById("currency").addEventListener("change", convert);
-  </script>
+  <p>匯率頁面已移至 <a href="./exchange/">匯率換算 App</a>。</p>
 </body>
 </html>

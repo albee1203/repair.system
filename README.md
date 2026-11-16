@@ -22,6 +22,16 @@
 
 ## 每日匯率
 
-GitHub Actions 排程（`.github/workflows/daily-rates.yml`）於台北時間週一至週五 16:23 抓取臺灣銀行牌告匯率，將各幣別兌新臺幣的現金與即期買入、賣出價存成 `rates/YYYY-MM-DD.csv`，並更新 `rates/latest.json`。也可在 Actions 頁面手動執行「每日匯率」。網頁 `rates.html` 顯示最新匯率並可換算新臺幣。
+GitHub Actions 排程（`.github/workflows/daily-rates.yml`）於台北時間週一至週五 16:23 抓取臺灣銀行牌告匯率，將各幣別兌新臺幣的現金與即期買入、賣出價存成 `rates/YYYY-MM-DD.csv`，並更新 `rates/latest.json`。也可在 Actions 頁面手動執行「每日匯率」。
+### 匯率換算 App
+
+開啟 `exchange/`（舊網址 `rates.html` 會自動轉址）。輸入金額即可換算：
+
+- 「外幣 → 台幣」以銀行買入價計算，「台幣 → 外幣」以銀行賣出價計算，可切換即期或現金匯率。
+- 下方「全部幣別」同時列出各幣別換算結果，點一列可切換幣別。
+- 可安裝到手機主畫面（方式同報修網頁）。離線時使用上次下載的匯率，並在標題下方註明。
+- 上次的金額、幣別與換算方式會保留在瀏覽器中。
+
+修改 `exchange/` 的介面檔案時，請更新 `exchange/sw.js` 的快取版本。
 
 本機測試：`python -m unittest discover -s tests -v`；手動抓取：`python scripts/fetch_rates.py`。
