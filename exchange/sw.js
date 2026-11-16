@@ -1,11 +1,11 @@
 // 匯率換算 App：介面與匯率資料都先連網取得最新版，離線時改用上次下載的版本。
 const cachePrefix = `exchange-app:${self.registration.scope}:`;
-const cacheName = `${cachePrefix}v2`;
+const cacheName = `${cachePrefix}v3`;
 const shell = ["./", "index.html", "style.css", "app.js", "manifest.webmanifest",
   "icons/exchange-180.png", "icons/exchange-192.png", "icons/exchange-512.png"]
   .map((p) => new URL(p, self.registration.scope).href);
 const indexUrl = new URL("index.html", self.registration.scope).href;
-const ratesUrl = new URL("../rates/latest.json", self.registration.scope).href;
+const dataUrls = ["../rates/latest.json", "../rates/history.json"].map((p) => new URL(p, self.registration.scope).href);
 
 self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
@@ -28,15 +28,16 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   url.search = "";
 
-  if (url.href === ratesUrl) {
+  if (dataUrls.includes(url.href)) {
+    const dataUrl = url.href;
     event.respondWith((async () => {
       const cache = await caches.open(cacheName);
       try {
         const res = await fetch(event.request);
-        if (res.ok) await cache.put(ratesUrl, res.clone());
+        if (res.ok) await cache.put(dataUrl, res.clone());
         return res;
       } catch (error) {
-        const cached = await cache.match(ratesUrl);
+        const cached = await cache.match(dataUrl);
         if (!cached) throw error;
         const headers = new Headers(cached.headers);
         headers.set("x-from-cache", "1");

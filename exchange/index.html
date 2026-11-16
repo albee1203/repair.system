@@ -43,6 +43,21 @@
       </div>
     </form>
 
+    <section class="card" aria-labelledby="trend-heading">
+      <div class="trend-head">
+        <div>
+          <h2 id="trend-heading">主要貨幣匯率變動</h2>
+          <p class="muted">以即期賣出價計算（韓元無即期價，用現金賣出價）；漲跌為較前一營業日；▲ 外幣變貴、▼ 外幣變便宜。</p>
+        </div>
+        <div class="range" role="group" aria-label="走勢期間">
+          <button type="button" data-range="5" aria-pressed="false">1週</button>
+          <button type="button" data-range="22" aria-pressed="true">1月</button>
+          <button type="button" data-range="66" aria-pressed="false">3月</button>
+        </div>
+      </div>
+      <ul id="trend-list" class="trend-list"><li class="muted">載入中…</li></ul>
+    </section>
+
     <section class="card">
       <h2 id="all-heading">全部幣別</h2>
       <p class="muted" id="all-note">輸入金額後，一次看各幣別換算結果。</p>

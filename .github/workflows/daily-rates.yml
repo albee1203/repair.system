@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "23 8 * * 1-5" # 台北時間週一至週五 16:23
   workflow_dispatch:
+    inputs:
+      backfill_days:
+        description: "補抓過去幾天的匯率（0 表示不補抓）"
+        required: false
+        default: "0"
 
 permissions:
   contents: write
@@ -23,7 +28,9 @@ jobs:
       - name: 測試解析程式
         run: python -m unittest discover -s tests -v
       - name: 抓取臺灣銀行牌告匯率
-        run: python scripts/fetch_rates.py
+        env:
+          BACKFILL_DAYS: ${{ inputs.backfill_days || '0' }}
+        run: python scripts/fetch_rates.py --backfill-days "$BACKFILL_DAYS"
       - name: 提交匯率檔案
         run: |
           git config user.name "github-actions[bot]"
@@ -34,4 +41,5 @@ jobs:
             exit 0
           fi
           git commit -m "更新 $(TZ=Asia/Taipei date +%F) 匯率"
+          git pull --rebase
           git push
