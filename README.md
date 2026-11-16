@@ -19,3 +19,9 @@
 首次連線載入後，離線時可開啟報修介面。查詢與送出需連線，離線不會排程補送，也不會將報修紀錄寫入離線快取。
 
 本機驗證可在儲存庫根目錄執行 `py -m http.server 8000`，再開啟 `http://localhost:8000/`。修改離線快取的檔案時，請一併更新 `sw.js` 的快取版本，讓瀏覽器安裝新版。
+
+## 每日匯率
+
+GitHub Actions 排程（`.github/workflows/daily-rates.yml`）於台北時間週一至週五 16:23 抓取臺灣銀行牌告匯率，將各幣別兌新臺幣的現金與即期買入、賣出價存成 `rates/YYYY-MM-DD.csv`，並更新 `rates/latest.json`。也可在 Actions 頁面手動執行「每日匯率」。網頁 `rates.html` 顯示最新匯率並可換算新臺幣。
+
+本機測試：`python -m unittest discover -s tests -v`；手動抓取：`python scripts/fetch_rates.py`。
