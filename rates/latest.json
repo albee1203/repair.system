@@ -1,96 +1,96 @@
 {
-  "date": "2026-11-17",
-  "fetched_at": "2026-11-17T17:24:37+08:00",
+  "date": "2026-11-18",
+  "fetched_at": "2026-11-18T17:26:27+08:00",
   "source": "https://rate.bot.com.tw/xrt/flcsv/0/day",
   "rates": [
     {
       "currency": "USD",
-      "cash_buy": 32.45,
-      "cash_sell": 33.12,
-      "spot_buy": 32.775,
-      "spot_sell": 32.925
+      "cash_buy": 32.545,
+      "cash_sell": 33.215,
+      "spot_buy": 32.87,
+      "spot_sell": 33.02
     },
     {
       "currency": "HKD",
-      "cash_buy": 4.031,
-      "cash_sell": 4.235,
-      "spot_buy": 4.152,
-      "spot_sell": 4.222
+      "cash_buy": 4.043,
+      "cash_sell": 4.247,
+      "spot_buy": 4.164,
+      "spot_sell": 4.234
     },
     {
       "currency": "GBP",
-      "cash_buy": 42.16,
-      "cash_sell": 44.28,
-      "spot_buy": 43.055,
-      "spot_sell": 43.685
+      "cash_buy": 42.15,
+      "cash_sell": 44.27,
+      "spot_buy": 43.045,
+      "spot_sell": 43.675
     },
     {
       "currency": "AUD",
-      "cash_buy": 21.74,
-      "cash_sell": 22.52,
-      "spot_buy": 21.955,
-      "spot_sell": 22.3
+      "cash_buy": 21.76,
+      "cash_sell": 22.54,
+      "spot_buy": 21.975,
+      "spot_sell": 22.32
     },
     {
       "currency": "CAD",
-      "cash_buy": 22.49,
-      "cash_sell": 23.4,
-      "spot_buy": 22.82,
-      "spot_sell": 23.15
+      "cash_buy": 22.51,
+      "cash_sell": 23.42,
+      "spot_buy": 22.84,
+      "spot_sell": 23.17
     },
     {
       "currency": "SGD",
-      "cash_buy": 24.93,
-      "cash_sell": 25.84,
-      "spot_buy": 25.4,
-      "spot_sell": 25.62
+      "cash_buy": 24.96,
+      "cash_sell": 25.87,
+      "spot_buy": 25.43,
+      "spot_sell": 25.65
     },
     {
       "currency": "CHF",
-      "cash_buy": 38.39,
-      "cash_sell": 39.59,
-      "spot_buy": 39.0,
-      "spot_sell": 39.39
+      "cash_buy": 38.33,
+      "cash_sell": 39.53,
+      "spot_buy": 38.94,
+      "spot_sell": 39.33
     },
     {
       "currency": "JPY",
-      "cash_buy": 0.1976,
-      "cash_sell": 0.2104,
-      "spot_buy": 0.2044,
-      "spot_sell": 0.2094
+      "cash_buy": 0.1977,
+      "cash_sell": 0.2105,
+      "spot_buy": 0.2045,
+      "spot_sell": 0.2095
     },
     {
       "currency": "ZAR",
       "cash_buy": null,
       "cash_sell": null,
-      "spot_buy": 1.894,
-      "spot_sell": 1.984
+      "spot_buy": 1.884,
+      "spot_sell": 1.974
     },
     {
       "currency": "SEK",
       "cash_buy": null,
       "cash_sell": null,
-      "spot_buy": 3.2,
-      "spot_sell": 3.32
+      "spot_buy": 3.19,
+      "spot_sell": 3.31
     },
     {
       "currency": "NZD",
-      "cash_buy": 17.59,
-      "cash_sell": 18.44,
-      "spot_buy": 17.92,
-      "spot_sell": 18.22
+      "cash_buy": 17.6,
+      "cash_sell": 18.45,
+      "spot_buy": 17.93,
+      "spot_sell": 18.23
     },
     {
       "currency": "THB",
-      "cash_buy": 0.843,
-      "cash_sell": 1.033,
-      "spot_buy": 0.9534,
-      "spot_sell": 0.9994
+      "cash_buy": 0.8412,
+      "cash_sell": 1.0312,
+      "spot_buy": 0.9516,
+      "spot_sell": 0.9976
     },
     {
       "currency": "PHP",
-      "cash_buy": 0.45,
-      "cash_sell": 0.582,
+      "cash_buy": 0.4511,
+      "cash_sell": 0.5831,
       "spot_buy": null,
       "spot_sell": null
     },
@@ -103,38 +103,38 @@
     },
     {
       "currency": "EUR",
-      "cash_buy": 35.33,
-      "cash_sell": 36.67,
-      "spot_buy": 35.845,
-      "spot_sell": 36.445
+      "cash_buy": 35.32,
+      "cash_sell": 36.66,
+      "spot_buy": 35.835,
+      "spot_sell": 36.435
     },
     {
       "currency": "KRW",
-      "cash_buy": 0.02286,
-      "cash_sell": 0.02676,
+      "cash_buy": 0.023,
+      "cash_sell": 0.0269,
       "spot_buy": null,
       "spot_sell": null
     },
     {
       "currency": "VND",
-      "cash_buy": 0.00103,
-      "cash_sell": 0.00144,
+      "cash_buy": 0.00104,
+      "cash_sell": 0.00145,
       "spot_buy": null,
       "spot_sell": null
     },
     {
       "currency": "MYR",
-      "cash_buy": 7.004,
-      "cash_sell": 8.529,
+      "cash_buy": 6.975,
+      "cash_sell": 8.5,
       "spot_buy": null,
       "spot_sell": null
     },
     {
       "currency": "CNY",
-      "cash_buy": 4.832,
-      "cash_sell": 4.994,
-      "spot_buy": 4.899,
-      "spot_sell": 4.959
+      "cash_buy": 4.846,
+      "cash_sell": 5.008,
+      "spot_buy": 4.913,
+      "spot_sell": 4.973
     }
   ]
 }
