@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-19",
-  "fetched_at": "2026-11-19T17:29:20+08:00",
+  "date": "2026-11-20",
+  "fetched_at": "2026-11-20T17:24:23+08:00",
   "source": "https://rate.bot.com.tw/xrt/flcsv/0/day",
   "rates": [
     {
@@ -12,85 +12,85 @@
     },
     {
       "currency": "HKD",
-      "cash_buy": 4.043,
-      "cash_sell": 4.247,
-      "spot_buy": 4.164,
-      "spot_sell": 4.234
+      "cash_buy": 4.046,
+      "cash_sell": 4.25,
+      "spot_buy": 4.167,
+      "spot_sell": 4.237
     },
     {
       "currency": "GBP",
-      "cash_buy": 42.14,
-      "cash_sell": 44.26,
-      "spot_buy": 43.035,
-      "spot_sell": 43.665
+      "cash_buy": 41.97,
+      "cash_sell": 44.09,
+      "spot_buy": 42.865,
+      "spot_sell": 43.495
     },
     {
       "currency": "AUD",
-      "cash_buy": 21.72,
-      "cash_sell": 22.5,
-      "spot_buy": 21.935,
-      "spot_sell": 22.28
+      "cash_buy": 21.57,
+      "cash_sell": 22.35,
+      "spot_buy": 21.785,
+      "spot_sell": 22.13
     },
     {
       "currency": "CAD",
-      "cash_buy": 22.52,
-      "cash_sell": 23.43,
-      "spot_buy": 22.85,
-      "spot_sell": 23.18
+      "cash_buy": 22.5,
+      "cash_sell": 23.41,
+      "spot_buy": 22.83,
+      "spot_sell": 23.16
     },
     {
       "currency": "SGD",
-      "cash_buy": 24.97,
-      "cash_sell": 25.88,
-      "spot_buy": 25.44,
-      "spot_sell": 25.66
+      "cash_buy": 24.96,
+      "cash_sell": 25.87,
+      "spot_buy": 25.43,
+      "spot_sell": 25.65
     },
     {
       "currency": "CHF",
-      "cash_buy": 38.31,
-      "cash_sell": 39.51,
-      "spot_buy": 38.92,
-      "spot_sell": 39.31
+      "cash_buy": 38.29,
+      "cash_sell": 39.49,
+      "spot_buy": 38.9,
+      "spot_sell": 39.29
     },
     {
       "currency": "JPY",
-      "cash_buy": 0.197,
-      "cash_sell": 0.2098,
-      "spot_buy": 0.2038,
-      "spot_sell": 0.2088
+      "cash_buy": 0.198,
+      "cash_sell": 0.2108,
+      "spot_buy": 0.2048,
+      "spot_sell": 0.2098
     },
     {
       "currency": "ZAR",
       "cash_buy": null,
       "cash_sell": null,
-      "spot_buy": 1.862,
-      "spot_sell": 1.952
+      "spot_buy": 1.839,
+      "spot_sell": 1.929
     },
     {
       "currency": "SEK",
       "cash_buy": null,
       "cash_sell": null,
-      "spot_buy": 3.19,
-      "spot_sell": 3.31
+      "spot_buy": 3.17,
+      "spot_sell": 3.29
     },
     {
       "currency": "NZD",
-      "cash_buy": 17.7,
-      "cash_sell": 18.55,
-      "spot_buy": 18.03,
-      "spot_sell": 18.33
+      "cash_buy": 17.65,
+      "cash_sell": 18.5,
+      "spot_buy": 17.98,
+      "spot_sell": 18.28
     },
     {
       "currency": "THB",
-      "cash_buy": 0.8437,
-      "cash_sell": 1.0337,
-      "spot_buy": 0.9541,
-      "spot_sell": 1.0001
+      "cash_buy": 0.8424,
+      "cash_sell": 1.0324,
+      "spot_buy": 0.9528,
+      "spot_sell": 0.9988
     },
     {
       "currency": "PHP",
-      "cash_buy": 0.4515,
-      "cash_sell": 0.5835,
+      "cash_buy": 0.4501,
+      "cash_sell": 0.5821,
       "spot_buy": null,
       "spot_sell": null
     },
@@ -103,15 +103,15 @@
     },
     {
       "currency": "EUR",
-      "cash_buy": 35.42,
-      "cash_sell": 36.76,
-      "spot_buy": 35.935,
-      "spot_sell": 36.535
+      "cash_buy": 35.32,
+      "cash_sell": 36.66,
+      "spot_buy": 35.835,
+      "spot_sell": 36.435
     },
     {
       "currency": "KRW",
-      "cash_buy": 0.02304,
-      "cash_sell": 0.02694,
+      "cash_buy": 0.02292,
+      "cash_sell": 0.02682,
       "spot_buy": null,
       "spot_sell": null
     },
@@ -124,17 +124,17 @@
     },
     {
       "currency": "MYR",
-      "cash_buy": 6.984,
-      "cash_sell": 8.509,
+      "cash_buy": 6.982,
+      "cash_sell": 8.507,
       "spot_buy": null,
       "spot_sell": null
     },
     {
       "currency": "CNY",
-      "cash_buy": 4.846,
-      "cash_sell": 5.008,
-      "spot_buy": 4.913,
-      "spot_sell": 4.973
+      "cash_buy": 4.838,
+      "cash_sell": 5.0,
+      "spot_buy": 4.905,
+      "spot_sell": 4.965
     }
   ]
 }
